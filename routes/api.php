@@ -22,3 +22,9 @@ Route::apiResource('categories', CategoryController::class);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('product-sizes', ProductSizeController::class);
 
+Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
+    Route::apiResource('customers', UserController::class);
+    Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('products', ProductController::class);
+    Route::apiResource('product-sizes', ProductSizeController::class);
+});
