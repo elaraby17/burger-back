@@ -50,24 +50,50 @@ class SauceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Sauce $sauce)
     {
-        //
+        try {
+            return $this->success($sauce, 'Sauce retrieved successfully', 200);
+        } catch (\Exception $e) {
+            return $this->error('Failed to retrieve sauce', 500);
+        }
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Sauce $sauce)
     {
-        //
+        try {
+            $request->validate([
+                'name_en' => 'required|string|max:255',
+                'name_ar' => 'required|string|max:255',
+                'icon' => 'nullable|string',
+                'active' => 'nullable|boolean',
+                'order' => 'nullable|integer',
+            ]);
+
+            $sauce->update($request->all());
+
+            return $this->success($sauce, 'Sauce updated successfully', 200);
+        } catch (\Exception $e) {
+            return $this->error('Failed to update sauce', 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Sauce $sauce)
     {
-        //
+        try {
+            $sauce = Sauce::findOrFail($id);
+            $sauce->delete();
+
+            return $this->success(null, 'Sauce deleted successfully', 200);
+        } catch (\Exception $e) {
+            return $this->error('Failed to delete sauce', 500);
+        }
     }
 }
