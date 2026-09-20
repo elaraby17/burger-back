@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductSizeController;
+use App\Http\Controllers\Api\SauceController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,8 @@ Route::apiResource('admin/customers', UserController::class);
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('product-sizes', ProductSizeController::class);
+
+Route::apiResource('sauces', SauceController::class);
 
 Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
     Route::apiResource('customers', UserController::class);

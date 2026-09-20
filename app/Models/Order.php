@@ -2,38 +2,39 @@
 
 namespace App\Models;
 
-use App\Models\Payment;
-use App\Models\User;
 use App\Models\Branch;
 use App\Models\OrderItem;
-use App\Models\Order_Status_History;
-
+use App\Models\OrderStatusHistory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
     protected $guarded = [];
-    public function user()
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function branch()
+    public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
     }
 
-    public function items()
+    public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    public function statusHistory()
+    public function statusHistory(): HasMany
     {
-        return $this->hasMany(Order_Status_History::class);
+        return $this->hasMany(OrderStatusHistory::class);
     }
 
-    public function payment()
+    public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
     }
