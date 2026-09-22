@@ -28,6 +28,17 @@ class ProductController extends Controller
         }
     }
 
+    public function productPopular()
+    {
+        try {
+            $products = Product::with('category')->where('popular', true)->get();
+
+            return $this->success(ProductResource::collection($products), 'Popular products retrieved successfully');
+        } catch (\Exception $e) {
+            return $this->error(null, 'Failed to retrieve popular products', 500);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      */

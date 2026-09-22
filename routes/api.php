@@ -20,7 +20,14 @@ Route::prefix('auth')->group(function () {
 
 Route::apiResource('admin/customers', UserController::class);
 Route::apiResource('categories', CategoryController::class);
+
+// MUST come before apiResource('products', ...): the resource route's
+// GET products/{product} is registered first-match-wins, so it would
+// otherwise swallow "/products/popular" and try to look up a product
+// with id/slug "popular" — which is exactly the 404 we were chasing.
+Route::get('products/popular', [ProductController::class, 'productPopular']);
 Route::apiResource('products', ProductController::class);
+
 Route::apiResource('product-sizes', ProductSizeController::class);
 
 Route::apiResource('sauces', SauceController::class);
