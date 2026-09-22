@@ -55,7 +55,7 @@ class ProductController extends Controller
             return $this->success(new ProductResource($product), 'Product created successfully', 201);
         } catch (\Exception $e) {
             // قم بإرجاع رسالة الخطأ الأصلية لتظهر في البوست مان وتعرف السبب بدقة
-            return $this->error($e->getMessage(), 'Failed to create product', 500);
+            return $this->error(null, $e->getMessage(), 500);
         }
     }
 
