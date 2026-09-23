@@ -88,7 +88,6 @@ class SauceController extends Controller
     public function destroy(Sauce $sauce)
     {
         try {
-            $sauce = Sauce::findOrFail($id);
             $sauce->delete();
 
             return $this->success(null, 'Sauce deleted successfully', 200);

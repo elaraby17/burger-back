@@ -60,8 +60,21 @@ class AuthController extends Controller
         return $this->success(null, 'Logged out successfully');
     }
 
-    public function me(Request $request)
+    public function profile(Request $request)
     {
         return $this->success(new UserResource($request->user()), 'User retrieved successfully');
+    }
+    public function profileEdit(Request $request)
+    {
+        $user = $request->user();
+        $data = $request->only(['name', 'email', 'phone', 'avatar']);
+
+        if ($request->hasFile('avatar')) {
+            $data['avatar'] = $request->file('avatar')->store('users', 'public');
+        }
+
+        $user->update($data);
+
+        return $this->success(new UserResource($user), 'User profile updated successfully');
     }
 }
