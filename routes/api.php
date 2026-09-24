@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthAdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductSizeController;
 use App\Http\Controllers\Api\SauceController;
@@ -16,8 +17,14 @@ Route::prefix('user')->group(function () {
     });
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
+        
         Route::get('/profile', [AuthController::class, 'profile']);
         Route::put('/profile', [AuthController::class, 'profileEdit']);
+
+        Route::get('/favorites', [FavoriteController::class, 'index']);
+        Route::post('/favorites', [FavoriteController::class, 'store']);
+        Route::delete('/favorites/{id}', [FavoriteController::class, 'destroy']);
+
     });
 
     Route::get('products/popular', [ProductController::class, 'productPopular']);
@@ -70,4 +77,5 @@ Route::prefix('admin')->group(function () {
 
         Route::apiResource('sauces', SauceController::class);
     });
+
 });
