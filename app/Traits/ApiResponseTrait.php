@@ -10,17 +10,17 @@ trait ApiResponseTrait
             'success' => true,
             'message' => $message,
             'data' => $data,
-            'errors' => null
+            'errors' => null,
         ], $code);
     }
 
-    public function error($errors = [],$message = 'error', $code = 400)
+    public function error($message = 'error', $code = 400, $errors = null)
     {
         return response()->json([
             'success' => false,
             'message' => $message,
             'data' => null,
-            'errors' => $errors
+            'errors' => $errors,
         ], $code);
     }
 }

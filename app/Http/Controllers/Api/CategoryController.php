@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Container\Attributes\Log;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -23,8 +24,10 @@ class CategoryController extends Controller
             $categories = Category::all();
 
             return $this->success(CategoryResource::collection($categories), 'Categories retrieved successfully');
-        } catch (\Exception $e) {
-            return $this->error(null, 'Failed to retrieve categories', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
@@ -33,13 +36,19 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
+        try {
+            $data = $request->validated();
+            $data['slug'] = Str::slug($request->name_en);
 
-        $data = $request->validated();
-        $data['slug'] = Str::slug($request->name_en);
+            $category = Category::create($data);
 
-        $category = Category::create($data);
+            return $this->success(new CategoryResource($category), 'Category created successfully');
 
-        return $this->success(new CategoryResource($category), 'Category created successfully');
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
+        }
     }
 
     /**
@@ -49,8 +58,10 @@ class CategoryController extends Controller
     {
         try {
             return $this->success(new CategoryResource($category), 'Category retrieved successfully');
-        } catch (\Exception $e) {
-            return $this->error(null, 'Failed to retrieve category', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
@@ -66,8 +77,10 @@ class CategoryController extends Controller
             $category->update($data);
 
             return $this->success(new CategoryResource($category), 'Category updated successfully');
-        } catch (\Exception $e) {
-            return $this->error(null, 'Failed to update category', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
@@ -80,8 +93,10 @@ class CategoryController extends Controller
             $category->delete();
 
             return $this->success(null, 'Category deleted successfully');
-        } catch (\Exception $e) {
-            return $this->error(null, 'Failed to delete category', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Container\Attributes\Log;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -23,8 +24,10 @@ class ProductController extends Controller
             $products = Product::with('category')->get();
 
             return $this->success(ProductResource::collection($products), 'Products retrieved successfully');
-        } catch (\Exception $e) {
-            return $this->error(null, 'Failed to retrieve products', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
@@ -34,8 +37,10 @@ class ProductController extends Controller
             $products = Product::with('category')->where('popular', true)->get();
 
             return $this->success(ProductResource::collection($products), 'Popular products retrieved successfully');
-        } catch (\Exception $e) {
-            return $this->error(null, 'Failed to retrieve popular products', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
@@ -53,9 +58,10 @@ class ProductController extends Controller
             $product = Product::create($data);
 
             return $this->success(new ProductResource($product), 'Product created successfully', 201);
-        } catch (\Exception $e) {
-            // قم بإرجاع رسالة الخطأ الأصلية لتظهر في البوست مان وتعرف السبب بدقة
-            return $this->error(null, $e->getMessage(), 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
@@ -64,7 +70,13 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return $this->success(new ProductResource($product), 'Product retrieved successfully');
+        try {
+            return $this->success(new ProductResource($product), 'Product retrieved successfully');
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
+        }
     }
 
     /**
@@ -82,8 +94,10 @@ class ProductController extends Controller
             $product->update($data);
 
             return $this->success(new ProductResource($product), 'Product updated successfully');
-        } catch (\Exception $e) {
-            return $this->error(null, 'Failed to update product', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
@@ -96,8 +110,10 @@ class ProductController extends Controller
             $product->delete();
 
             return $this->success(null, 'Product deleted successfully');
-        } catch (\Exception $e) {
-            return $this->error(null, 'Failed to delete product', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 }

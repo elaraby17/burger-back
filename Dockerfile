@@ -16,7 +16,7 @@ RUN composer install \
 FROM php:8.2-cli
 
 WORKDIR /app
-
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # مكتبات النظام + إضافات PHP المطلوبة لـ Laravel
 RUN apt-get update && apt-get install -y \
     libzip-dev zip unzip git libpq-dev \

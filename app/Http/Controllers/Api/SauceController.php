@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Sauce;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Container\Attributes\Log;
 use Illuminate\Http\Request;
 
 class SauceController extends Controller
@@ -20,8 +21,10 @@ class SauceController extends Controller
             $sauces = Sauce::all();
 
             return $this->success($sauces, 'Sauces retrieved successfully', 200);
-        } catch (\Exception $e) {
-            return $this->error('Failed to retrieve sauces', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
@@ -42,7 +45,9 @@ class SauceController extends Controller
             $sauce = Sauce::create($request->all());
 
             return $this->success($sauce, 'Sauce created successfully', 201);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
             return $this->error('Failed to create sauce', 500);
         }
     }
@@ -54,11 +59,12 @@ class SauceController extends Controller
     {
         try {
             return $this->success($sauce, 'Sauce retrieved successfully', 200);
-        } catch (\Exception $e) {
-            return $this->error('Failed to retrieve sauce', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -77,8 +83,10 @@ class SauceController extends Controller
             $sauce->update($request->all());
 
             return $this->success($sauce, 'Sauce updated successfully', 200);
-        } catch (\Exception $e) {
-            return $this->error('Failed to update sauce', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
@@ -91,8 +99,10 @@ class SauceController extends Controller
             $sauce->delete();
 
             return $this->success(null, 'Sauce deleted successfully', 200);
-        } catch (\Exception $e) {
-            return $this->error('Failed to delete sauce', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 }

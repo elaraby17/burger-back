@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Container\Attributes\Log;
 
 class UserController extends Controller
 {
@@ -22,8 +23,10 @@ class UserController extends Controller
             $users = User::all();
 
             return $this->success(UserResource::collection($users), 'Users retrieved successfully');
-        } catch (\Exception $e) {
-            return $this->error('Failed to retrieve users', 500);
+        } catch (\Throwable $e) {
+
+            Log::error('Failed to create sauce: '.$e->getMessage());
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
@@ -47,27 +50,31 @@ class UserController extends Controller
             $user = User::create($validatedData);
 
             return $this->success(new UserResource($user), 'User created successfully', 201);
-        } catch (\Exception $e) {
-            return $this->error('Failed to create user', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $customer)
     {
         try {
-            return $this->success(new UserResource($user), 'User retrieved successfully');
-        } catch (\Exception $e) {
-            return $this->error('Failed to retrieve user', 500);
+            return $this->success(new UserResource($customer), 'User retrieved successfully');
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $customer)
     {
         try {
             $validatedData = $request->validated();
@@ -83,25 +90,29 @@ class UserController extends Controller
                 $validatedData['password'] = bcrypt($validatedData['password']);
             }
 
-            $user->update($validatedData);
+            $customer->update($validatedData);
 
-            return $this->success(new UserResource($user), 'User updated successfully');
-        } catch (\Exception $e) {
-            return $this->error('Failed to update user', 500);
+            return $this->success(new UserResource($customer), 'User updated successfully');
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $customer)
     {
         try {
-            $user->delete();
+            $customer->delete();
 
             return $this->success(null, 'User deleted successfully');
-        } catch (\Exception $e) {
-            return $this->error('Failed to delete user', 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 }

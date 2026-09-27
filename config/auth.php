@@ -35,6 +35,15 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+
+        // Token guard for the admin API. The plain "sanctum" guard resolves
+        // against the "users" provider, so it would also accept a *customer*
+        // token. Pinning provider => 'admins' makes Sanctum reject any token
+        // whose tokenable is not an Admin model.
+        'sanctum_admin' => [
+            'driver' => 'sanctum',
+            'provider' => 'admins',
+        ],
     ],
 
     /*

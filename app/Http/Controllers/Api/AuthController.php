@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Container\Attributes\Log;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -28,53 +29,80 @@ class AuthController extends Controller
                 'user' => new UserResource($user),
                 'token' => $token,
             ], 'User registered successfully', 201);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Failed to register user: '.$e->getMessage()], 500);
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
     }
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+        try {
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|string',
+            ]);
 
-        if (! auth()->attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            if (! auth()->attempt($request->only('email', 'password'))) {
+                return response()->json(['message' => 'Invalid credentials'], 401);
+            }
+
+            $user = auth()->user();
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return $this->success([
+                'user' => new UserResource($user),
+                'token' => $token,
+            ], 'Login successful');
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
-
-        $user = auth()->user();
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return $this->success([
-            'user' => new UserResource($user),
-            'token' => $token,
-        ], 'Login successful');
     }
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        try {
+            $request->user()->currentAccessToken()->delete();
 
-        return $this->success(null, 'Logged out successfully');
+            return $this->success(null, 'Logged out successfully');
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
+        }
     }
 
     public function profile(Request $request)
     {
-        return $this->success(new UserResource($request->user()), 'User retrieved successfully');
+        try {
+            return $this->success(new UserResource($request->user()), 'User retrieved successfully');
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
+        }
     }
+
     public function profileEdit(Request $request)
     {
-        $user = $request->user();
-        $data = $request->only(['name', 'email', 'phone', 'avatar']);
+        try {
+            $user = $request->user();
+            $data = $request->only(['name', 'email', 'phone', 'avatar']);
 
-        if ($request->hasFile('avatar')) {
-            $data['avatar'] = $request->file('avatar')->store('users', 'public');
+            if ($request->hasFile('avatar')) {
+                $data['avatar'] = $request->file('avatar')->store('users', 'public');
+            }
+
+            $user->update($data);
+
+            return $this->success(new UserResource($user), 'User profile updated successfully');
+        } catch (\Throwable $e) {
+            Log::error('Failed to create sauce: '.$e->getMessage());
+
+            return $this->error('Failed to create sauce', 500);
         }
-
-        $user->update($data);
-
-        return $this->success(new UserResource($user), 'User profile updated successfully');
     }
 }

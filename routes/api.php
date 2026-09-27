@@ -61,7 +61,7 @@ Route::prefix('admin')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth:sanctum_admin')->group(function () {
 
         Route::post('/logout', [AuthAdminController::class, 'logout']);
 
