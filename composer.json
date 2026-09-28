@@ -9,11 +9,12 @@
     ],
     "license": "MIT",
 "require": {
-    "php": "^8.2",
-    "laravel/framework": "^12.0",
-    "laravel/sanctum": "^4.0",
-    "laravel/tinker": "^3.0"
-},
+        "php": "^8.2",
+        "laravel/framework": "^12.0",
+        "laravel/sanctum": "^4.0",
+        "laravel/tinker": "^3.0",
+        "waapi/waapi-laravel-sdk": "^2.0"
+    },
 "require-dev": {
     "fakerphp/faker": "^1.23",
     "laravel/boost": "^2.2",

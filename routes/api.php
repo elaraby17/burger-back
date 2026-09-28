@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthAdminController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BranchController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\ProductController;
@@ -17,7 +18,7 @@ Route::prefix('user')->group(function () {
     });
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
-        
+
         Route::get('/profile', [AuthController::class, 'profile']);
         Route::put('/profile', [AuthController::class, 'profileEdit']);
 
@@ -74,6 +75,10 @@ Route::prefix('admin')->group(function () {
         Route::apiResource('products', ProductController::class);
 
         Route::apiResource('product-sizes', ProductSizeController::class);
+
+        Route::apiResource('products/{product}/product-sizes', ProductSizeController::class);
+
+        Route::apiResource('branches', BranchController::class);
 
         Route::apiResource('sauces', SauceController::class);
     });
